@@ -15,12 +15,23 @@
 #include <iostream>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 
 using namespace std;
 
 int main()
 {
     cout << "Master PID, " << getpid() << ", begins execution" << endl;
+
+    // Create variables
+    int message_queue_id;
+
+    // Acquire a message queue
+    message_queue_id = msgget(IPC_PRIVATE, IPC_EXCL | IPC_CREAT | 0600);
+
+    cout << "Master acquired a message queue, id " << message_queue_id << endl; 
 
     return 0;
 }

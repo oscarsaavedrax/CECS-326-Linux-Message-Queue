@@ -12,3 +12,15 @@
  *      program then removes the message queue and exits.
  ***********************************************************************/
 
+#include <iostream>
+#include <unistd.h>
+#include <sys/wait.h>
+
+using namespace std;
+
+int main()
+{
+    cout << "Master PID, " << getpid() << ", begins execution" << endl;
+
+    return 0;
+}

@@ -13,6 +13,7 @@
  ***********************************************************************/
 
 #include <iostream>
+#include <string>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/types.h>
@@ -23,16 +24,19 @@ using namespace std;
 
 int main()
 {
-    cout << "Master PID, " << getpid() << ", begins execution" << endl;
+    cout << "Master, PID " << getpid() << ", begins execution" << endl;
 
     // Create variables
-    int message_queue_id;
+    int msg_queue_id_int;
     pid_t sender_pid;
     
     // Acquire a message queue
-    message_queue_id = msgget(IPC_PRIVATE, IPC_EXCL | IPC_CREAT | 0600);
+    msg_queue_id_int = msgget(IPC_PRIVATE, IPC_EXCL | IPC_CREAT | 0600);
+    // Convert int to char*
+    string msg_queue_str = to_string(msg_queue_id_int);
+    char* msg_queue_id = const_cast<char*>(msg_queue_str.c_str());
 
-    cout << "Master acquired a message queue, id " << message_queue_id << endl;
+    cout << "Master acquired a message queue, id " << msg_queue_id_int << endl;
 
     // Create sender process
     sender_pid = fork();
@@ -44,10 +48,16 @@ int main()
     else if(sender_pid == 0)
     {
         cout << "Master created a child process with PID " << getpid() << " to execute sender" << endl;
+        
+        // Create char array to send to sender process
+        char* sender_info[] = {msg_queue_id, NULL};
+        // Execute sender process
+        execv("./sender", sender_info);
+        exit(0);
     }
 
     // Remove the message queue
-    msgctl(message_queue_id, IPC_RMID, NULL);
+    msgctl(msg_queue_id_int, IPC_RMID, NULL);
 
     // Waiting for both children processes to terminate
     while(wait(NULL) != -1);

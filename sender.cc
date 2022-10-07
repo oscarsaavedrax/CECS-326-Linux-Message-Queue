@@ -22,10 +22,37 @@
 
 using namespace std;
 
+const int MAX_MSG_LENGTH = 100;
+
+// Declare global message buffer
+struct message_buffer 
+{
+    long message_type;
+    char message[MAX_MSG_LENGTH];
+};
+
 int main(int argc, char** argv)
 {
+
+    // Create variables
+    message_buffer message;
+    int message_size = sizeof(message) - sizeof(long);
+    
+    // Display sender information
     cout << "Sender, PID " << getpid() << ", begins execution" << endl;
     cout << "Sender received message queue id " << argv[0] << " through commandline parameter" << endl;
+    
+    // Get message from the user
+    cout << "Sender: Please input your message" << endl;
+    cin.getline (message.message, MAX_MSG_LENGTH);
 
+    // Send message to message queue
+    message.message_type = 114;
+    msgsnd(atoi(argv[0]), (struct message_buffer *)&message, message_size, 0);
+    cout << "Sender sent message to message queue" << endl;
+
+    // Terminate sender process
+    cout << "Sender receives acknowledgement of receipt of message" << endl;
+    cout << "Sender terminates" << endl;
     return 0;
 }

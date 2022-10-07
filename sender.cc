@@ -13,3 +13,19 @@
  *      of message, then terminates.
  ***********************************************************************/
 
+#include <iostream>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
+using namespace std;
+
+int main(int argc, char** argv)
+{
+    cout << "Sender, PID " << getpid() << ", begins execution" << endl;
+    cout << "Sender received message queue id " << argv[0] << " through commandline parameter" << endl;
+
+    return 0;
+}

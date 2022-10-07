@@ -12,3 +12,19 @@
  *      on the screen.
  ***********************************************************************/
 
+#include <iostream>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
+using namespace std;
+
+int main(int argc, char** argv)
+{
+    cout << "Receiver, PID " << getpid() << ", begins execution" << endl;
+    cout << "Receiver received message queue id " << argv[0] << " through commandline parameter" << endl;
+
+    return 0;
+}

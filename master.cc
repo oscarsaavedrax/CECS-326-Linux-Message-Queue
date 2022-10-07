@@ -62,5 +62,9 @@ int main()
     // Waiting for both children processes to terminate
     while(wait(NULL) != -1);
 
+    cout << "Master waits for both child processes to terminate" << endl;
+    cout << "Master received termination signals from both child processes ";
+    cout << "removed message queue, and terminates" << endl;
+
     return 0;
 }

@@ -4,11 +4,11 @@
  * Due Date	    : October 4, 2022
  * Description	: This program demonstrates how processes have 
  *      interprocess communication through the use of a message queue
- *      in Linux. This sender.cc program outputs a message to identify 
- *      itself, and show the message queue id it obtained from the exec() 
- *      system call that invokes its execution. The program prompts user 
- *      for a line of input, sends the input line to the receiver program
- *      via the message queue created by the master program. This program
+ *      in Linux. This sender.cc program outputs process ID and the 
+ *      message queue ID it obtained from the exec() system call that 
+ *      invokes its execution. The program prompts a user for a line of 
+ *      input, sends the input line to the receiver program via the 
+ *      message queue created by the master program. This program
  *      waits for an acknowledgement from receiver program of the receipt 
  *      of message, then terminates.
  ***********************************************************************/
@@ -22,6 +22,7 @@
 
 using namespace std;
 
+// Max length of the message
 const int MAX_MSG_LENGTH = 100;
 
 // Declare global message buffer
@@ -33,12 +34,11 @@ struct message_buffer
 
 int main(int argc, char** argv)
 {
-
     // Create variables
     message_buffer message;
     int message_size = sizeof(message) - sizeof(long);
     
-    // Display sender information
+    // Output Sender PID and message queue ID
     cout << "Sender, PID " << getpid() << ", begins execution" << endl;
     cout << "Sender received message queue id " << argv[0] << " through commandline parameter" << endl;
     

@@ -28,13 +28,16 @@ int main()
 
     // Create variables
     int msg_queue_id_int;
-    pid_t sender_pid;
+    pid_t sender_pid, receiver_pid;
     
     // Acquire a message queue
     msg_queue_id_int = msgget(IPC_PRIVATE, IPC_EXCL | IPC_CREAT | 0600);
     // Convert int to char*
     string msg_queue_str = to_string(msg_queue_id_int);
     char* msg_queue_id = const_cast<char*>(msg_queue_str.c_str());
+
+    // Create char array to send each process information
+    char* process_info[] = {msg_queue_id, NULL};
 
     cout << "Master acquired a message queue, id " << msg_queue_id_int << endl;
 
@@ -49,10 +52,24 @@ int main()
     {
         cout << "Master created a child process with PID " << getpid() << " to execute sender" << endl;
         
-        // Create char array to send to sender process
-        char* sender_info[] = {msg_queue_id, NULL};
         // Execute sender process
-        execv("./sender", sender_info);
+        execv("./sender", process_info);
+        exit(0);
+    }
+
+    // Create receiver process
+    receiver_pid = fork();
+    if(receiver_pid < 0)
+    {
+        cout << "Fork failed" << endl;
+        return 1;
+    }
+    else if(receiver_pid == 0)
+    {
+        cout << "Master created a child process with PID " << getpid() << " to execute receiver" << endl;
+        
+        // Execute sender process
+        execv("./receiver", process_info);
         exit(0);
     }
 

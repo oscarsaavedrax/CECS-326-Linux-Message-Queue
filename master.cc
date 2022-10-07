@@ -27,11 +27,30 @@ int main()
 
     // Create variables
     int message_queue_id;
-
+    pid_t sender_pid;
+    
     // Acquire a message queue
     message_queue_id = msgget(IPC_PRIVATE, IPC_EXCL | IPC_CREAT | 0600);
 
-    cout << "Master acquired a message queue, id " << message_queue_id << endl; 
+    cout << "Master acquired a message queue, id " << message_queue_id << endl;
+
+    // Create sender process
+    sender_pid = fork();
+    if(sender_pid < 0)
+    {
+        cout << "Fork failed" << endl;
+        return 1;
+    }
+    else if(sender_pid == 0)
+    {
+        cout << "Master created a child process with PID " << getpid() << " to execute sender" << endl;
+    }
+
+    // Remove the message queue
+    msgctl(message_queue_id, IPC_RMID, NULL);
+
+    // Waiting for both children processes to terminate
+    while(wait(NULL) != -1);
 
     return 0;
 }

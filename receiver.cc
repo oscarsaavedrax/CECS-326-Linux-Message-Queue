@@ -21,10 +21,29 @@
 
 using namespace std;
 
+const int MAX_MSG_LENGTH = 100;
+
+// Declare global message buffer
+struct message_buffer 
+{
+    long message_type;
+    char message[MAX_MSG_LENGTH];
+};
+
 int main(int argc, char** argv)
 {
+    message_buffer message;
+    int message_size = sizeof(message) - sizeof(long);
+
     cout << "Receiver, PID " << getpid() << ", begins execution" << endl;
     cout << "Receiver received message queue id " << argv[0] << " through commandline parameter" << endl;
+
+    msgrcv(atoi(argv[0]), (struct message_buffer *)&message, message_size, 114, 0);
+    cout << "Receiver acknowledged receipt of message" << endl;
+    cout << "Receiver: Retrieved the following message from message queue" << endl;
+    cout << message.message << endl;
+
+    cout << "Receiver terminates" << endl;
 
     return 0;
 }

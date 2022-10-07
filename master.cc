@@ -54,8 +54,9 @@ int main()
         
         // Execute sender process
         execv("./sender", process_info);
-        exit(0);
+        //exit(0);
     }
+    wait(0);
 
     // Create receiver process
     receiver_pid = fork();
@@ -72,6 +73,7 @@ int main()
         execv("./receiver", process_info);
         exit(0);
     }
+    wait(0);
 
     // Remove the message queue
     msgctl(msg_queue_id_int, IPC_RMID, NULL);
